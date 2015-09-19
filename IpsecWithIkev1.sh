@@ -21,7 +21,6 @@ conn ikev1
         leftsubnet=0.0.0.0/0
         leftfirewall=yes
         right=%any
-        #rightsubnet=10.0.0.0/24
         rightsourceip=10.0.0.0/24
         auto=add
 EOF
