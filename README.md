@@ -1,7 +1,15 @@
 # IPsecVPNWithStrongswan
-一键安装IPsec VPN，适用于搬瓦工VPS
+一键安装IPsec VPN，分别适用于搬瓦工VPS(OpenVZ)与DigitalOcean（KVM）
 
-测试环境为Ubuntu 14.04 32位版本，内核版本为2.6.32-042stab102.9
+搬瓦工使用的文件为IPSecWithIKEV1SourceCode.sh
+
+DO使用的文件为IPSecWithIKEV1Binary.sh
+
+测试环境为
+
+搬瓦工：Ubuntu 14.04 32位版本，内核版本为2.6.32-042stab102.9
+
+DO：Ubuntu 14.04 64位版本，内核版本为3.13.0-48-generic x86_64
 
 在文件修改/etc/ipsec.secrets部分中可自行定义PSK、账号和密码
 
