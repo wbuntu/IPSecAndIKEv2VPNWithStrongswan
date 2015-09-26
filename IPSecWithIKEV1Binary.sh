@@ -1,6 +1,6 @@
 #!/bin/sh
 apt-get update
-pt-get install strongswan strongswan-plugin-xauth-generic -y
+apt-get install strongswan strongswan-plugin-xauth-generic -y
 
 cat > /etc/ipsec.conf<<EOF
 config setup
@@ -52,3 +52,5 @@ ipsec start
 EOF
 
 chmod +x /etc/network/if-up.d/iptables
+
+ipsec restart
