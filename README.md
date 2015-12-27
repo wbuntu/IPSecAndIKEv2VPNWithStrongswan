@@ -1,9 +1,9 @@
-# IPsecVPNWithStrongswan
-一键安装IPsec VPN，分别适用于搬瓦工VPS(OpenVZ)与DigitalOcean（KVM）
+# IPSecAndIKEv2VPNWithStrongswan
+一键安装IPsec及IKEv2VPN，分别适用于搬瓦工VPS(OpenVZ)与DigitalOcean（KVM）
 
-搬瓦工使用的文件为IPSecWithIKEV1SourceCode.sh
+搬瓦工使用的文件为IPSecAndIKEv2SourceCode.sh
 
-DO使用的文件为IPSecWithIKEV1Binary.sh
+DO使用的文件为IPSecAndIKEv2Binary.sh
 
 测试环境为
 
