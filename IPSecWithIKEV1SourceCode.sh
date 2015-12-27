@@ -10,45 +10,91 @@ cd strongswan-*
 
 make && make install
 
+#attention! domainNameOrIP must be your server's domain name or IP address
+ipsec pki --gen --outform pem > caKey.pem
+ipsec pki --self --in caKey.pem --dn "C=CH, O=strongSwan, CN=strongSwan CA" --ca --outform pem > caCert.pem
+ipsec pki --gen --outform pem > serverKey.pem
+ipsec pki --pub --in serverKey.pem | ipsec pki --issue --cacert caCert.pem --cakey caKey.pem --dn "C=CH, O=strongSwan, CN=domainNameOrIP" --san="domainNameOrIP" --flag serverAuth --flag ikeIntermediate --outform pem > serverCert.pem
+#you have to add a password for clientCert
+ipsec pki --gen --outform pem > clientKey.pem
+ipsec pki --pub --in clientKey.pem | ipsec pki --issue --cacert caCert.pem --cakey caKey.pem --dn "C=CH, O=strongSwan, CN=client" --outform pem > clientCert.pem
+openssl pkcs12 -export -inkey clientKey.pem -in clientCert.pem -name "client" -certfile caCert.pem -caname "strongSwan CA" -out clientCert.p12
+
+cp caCert.pem /etc/ipsec.d/cacerts/
+cp serverCert.pem /etc/ipsec.d/certs/
+cp serverKey.pem /etc/ipsec.d/private/
+cp clientCert.pem /etc/ipsec.d/certs/
+cp clientKey.pem /etc/ipsec.d/private/
+
+mkdir clientCerts
+cp caCert.pem clientCert.p12 clientCerts
+mkdir allCerts
+mv caKey.pem caCert.pem serverKey.pem serverCert.pem clientKey.pem clientCert.pem clientCert.p12 allCerts
+
 cat > /etc/ipsec.conf<<EOF
 config setup
-        uniqueids=never
+    uniqueids=never
+    conn %default
+    ikelifetime=60m
+    keylife=20m
+    rekeymargin=3m
+    keyingtries=1
+    keyexchange=ike
+    ike=aes256-sha256-modp1024,3des-sha1-modp1024,aes256-sha1-modp1024!
+    esp=aes256-sha256,3des-sha1,aes256-sha1!
 conn ikev1
-        keyexchange=ikev1
-        authby=xauthpsk
-        xauth=server
-        left=%defaultroute
-        leftsubnet=0.0.0.0/0
-        leftfirewall=yes
-        right=%any
-        rightsourceip=10.0.0.0/24
-        auto=add
+    keyexchange=ikev1
+    authby=xauthpsk
+    xauth=server
+    left=%defaultroute
+    leftsubnet=0.0.0.0/0
+    leftfirewall=yes
+    right=%any
+    rightsourceip=10.0.0.0/24
+    auto=add
+conn ikev2
+    keyexchange=ikev2
+    leftauth=pubkey
+    leftcert=serverCert.pem
+    #attention！
+    leftid=@domainNameOrIP
+    leftsendcert=always
+    left=%defaultroute
+    leftsubnet=0.0.0.0/0
+    leftfirewall=yes
+    rightauth=eap-mschapv2
+    eap_identity=%any
+    right=%any
+    rightsourceip=10.0.0.0/24
+    auto=add
 EOF
 
 cat > /etc/strongswan.conf<<EOF
 charon {
-        duplicheck.enable = no
-        install_virtual_ip = yes
-        dns1 = 8.8.8.8
-        dns2 = 8.8.4.4
-        load_modular = yes
-        plugins {
-                include strongswan.d/charon/*.conf
-        }
+    duplicheck.enable = no
+    install_virtual_ip = yes
+    dns1 = 8.8.8.8
+    dns2 = 8.8.4.4
+    load_modular = yes
+    plugins {
+            include strongswan.d/charon/*.conf
+    }
 }
 
 include strongswan.d/*.conf
 EOF
 
 cat > /etc/ipsec.secrets<<EOF
+: RSA serverKey.pem
 : PSK "YourPSKHere"
+accountNameHere : EAP "passwdForAccountHere"
 accountNameHere : XAUTH "passwdForAccountHere"
 EOF
 
 iptables -A INPUT -p esp -j ACCEPT
 iptables -A INPUT -p udp --dport 500 -j ACCEPT
 iptables -A INPUT -p udp --dport 4500 -j ACCEPT
-iptables -t nat -A POSTROUTING -s 10.0.0.0/24 -o venet0 -j MASQUERADE
+iptables -t nat -A POSTROUTING -s 10.0.0.0/24 -o eth0 -j MASQUERADE
 iptables -A FORWARD -s 10.0.0.0/24 -j ACCEPT
 
 iptables-save > /etc/iptables.rules
@@ -61,4 +107,4 @@ EOF
 
 chmod +x /etc/network/if-up.d/iptables
 
-ipsec start
+ipsec restart
