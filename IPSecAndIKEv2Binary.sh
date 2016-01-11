@@ -47,7 +47,6 @@ conn ikev2
     keyexchange=ikev2
     leftauth=pubkey
     leftcert=serverCert.pem
-#attention！
     leftid=@domainNameOrIP
     leftsendcert=always
     left=%defaultroute
