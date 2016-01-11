@@ -34,7 +34,7 @@ mv caKey.pem caCert.pem serverKey.pem serverCert.pem clientKey.pem clientCert.pe
 cat > /etc/ipsec.conf<<EOF
 config setup
     uniqueids=never
-    conn %default
+conn %default
     ikelifetime=60m
     keylife=20m
     rekeymargin=3m
