@@ -64,7 +64,7 @@ conn ikev2-eap-mschapv2
     right=%any
     rightsourceip=10.0.0.0/24
     auto=add
-conn ikev2-eap-mschapv2
+conn ikev2-eap-md5
     keyexchange=ikev2
     leftauth=pubkey
     leftcert=serverCert.pem
