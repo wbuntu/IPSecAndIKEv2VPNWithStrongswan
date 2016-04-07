@@ -10,11 +10,11 @@ cd strongswan-*
 
 make && make install
 
-#attention! domainNameOrIP must be your server's domain name or IP address
+#attention! domainName must be your server's domain name
 ipsec pki --gen --outform pem > caKey.pem
 ipsec pki --self --in caKey.pem --dn "C=CH, O=strongSwan, CN=strongSwan CA" --ca --outform pem > caCert.pem
 ipsec pki --gen --outform pem > serverKey.pem
-ipsec pki --pub --in serverKey.pem | ipsec pki --issue --cacert caCert.pem --cakey caKey.pem --dn "C=CH, O=strongSwan, CN=domainNameOrIP" --san="domainNameOrIP" --flag serverAuth --flag ikeIntermediate --outform pem > serverCert.pem
+ipsec pki --pub --in serverKey.pem | ipsec pki --issue --cacert caCert.pem --cakey caKey.pem --dn "C=CH, O=strongSwan, CN=domainName" --san="domainName" --flag serverAuth --flag ikeIntermediate --outform pem > serverCert.pem
 #you have to add a password for clientCert
 ipsec pki --gen --outform pem > clientKey.pem
 ipsec pki --pub --in clientKey.pem | ipsec pki --issue --cacert caCert.pem --cakey caKey.pem --dn "C=CH, O=strongSwan, CN=client" --outform pem > clientCert.pem
@@ -40,8 +40,6 @@ conn %default
     rekeymargin=3m
     keyingtries=1
     keyexchange=ike
-    ike=aes256-sha256-modp1024,3des-sha1-modp1024,aes256-sha1-modp1024!
-    esp=aes256-sha256,3des-sha1,aes256-sha1!
 conn ikev1
     keyexchange=ikev1
     authby=xauthpsk
@@ -52,16 +50,30 @@ conn ikev1
     right=%any
     rightsourceip=10.0.0.0/24
     auto=add
-conn ikev2
+conn ikev2-eap-mschapv2
     keyexchange=ikev2
     leftauth=pubkey
     leftcert=serverCert.pem
-    leftid=@domainNameOrIP
+    leftid=@domainName
     leftsendcert=always
     left=%defaultroute
     leftsubnet=0.0.0.0/0
     leftfirewall=yes
     rightauth=eap-mschapv2
+    eap_identity=%any
+    right=%any
+    rightsourceip=10.0.0.0/24
+    auto=add
+conn ikev2-eap-mschapv2
+    keyexchange=ikev2
+    leftauth=pubkey
+    leftcert=serverCert.pem
+    leftid=@domainName
+    leftsendcert=always
+    left=%defaultroute
+    leftsubnet=0.0.0.0/0
+    leftfirewall=yes
+    rightauth=eap-md5
     eap_identity=%any
     right=%any
     rightsourceip=10.0.0.0/24
