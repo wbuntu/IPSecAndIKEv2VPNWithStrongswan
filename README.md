@@ -1,4 +1,11 @@
 # IPSecAndIKEv2VPNWithStrongswan
+
+相关链接
+
+[折腾搬瓦工–04–配置IPSec VPN](http://wbuntu.com/?p=224)
+
+[折腾搬瓦工–06–配置IKEv2 VPN](http://wbuntu.com/?p=323)
+
 一键安装IPsec及IKEv2VPN，分别适用于搬瓦工VPS(OpenVZ)与DigitalOcean（KVM）
 
 搬瓦工使用的文件为IPSecAndIKEv2SourceCode.sh
