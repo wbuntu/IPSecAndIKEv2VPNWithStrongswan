@@ -2,7 +2,7 @@
 apt-get update
 apt-get install build-essential libgmp3-dev libgmp-dev openssl libssl-dev -y
 
-wget http://download.strongswan.org/strongswan.tar.gz
+wget https://download.strongswan.org/strongswan-5.4.0.tar.gz
 tar zxvf strongswan*
 cd strongswan-*
 
@@ -105,7 +105,7 @@ EOF
 iptables -A INPUT -p esp -j ACCEPT
 iptables -A INPUT -p udp --dport 500 -j ACCEPT
 iptables -A INPUT -p udp --dport 4500 -j ACCEPT
-iptables -t nat -A POSTROUTING -s 10.0.0.0/24 -o eth0 -j MASQUERADE
+iptables -t nat -A POSTROUTING -s 10.0.0.0/24 -o venet0 -j MASQUERADE
 iptables -A FORWARD -s 10.0.0.0/24 -j ACCEPT
 
 iptables-save > /etc/iptables.rules
@@ -118,4 +118,4 @@ EOF
 
 chmod +x /etc/network/if-up.d/iptables
 
-ipsec restart
+ipsec start
