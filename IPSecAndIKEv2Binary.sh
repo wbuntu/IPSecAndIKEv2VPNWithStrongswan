@@ -5,7 +5,7 @@ apt-get install strongswan strongswan-plugin-xauth-generic strongswan-plugin-eap
 ipsec pki --gen --outform pem > caKey.pem
 ipsec pki --self --in caKey.pem --dn "C=CH, O=strongSwan, CN=strongSwan CA" --ca --outform pem > caCert.pem
 ipsec pki --gen --outform pem > serverKey.pem
-ipsec pki --pub --in serverKey.pem | ipsec pki --issue --cacert caCert.pem --cakey caKey.pem --dn "C=CH, O=strongSwan, CN=domainName" --san="domainName" --flag serverAuth --flag ikeIntermediate --outform pem > serverCert.pem
+ipsec pki --pub --in serverKey.pem | ipsec pki --issue --cacert caCert.pem --cakey caKey.pem --dn "C=CH, O=strongSwan, CN=domainName" --san="domainName" --flag serverAuth --outform pem > serverCert.pem
 #you have to add a password for clientCert
 ipsec pki --gen --outform pem > clientKey.pem
 ipsec pki --pub --in clientKey.pem | ipsec pki --issue --cacert caCert.pem --cakey caKey.pem --dn "C=CH, O=strongSwan, CN=client" --outform pem > clientCert.pem

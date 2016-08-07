@@ -2,9 +2,9 @@
 
 相关链接
 
-[折腾搬瓦工–04–配置IPSec VPN](http://wbuntu.com/?p=224)
+[折腾搬瓦工–04–配置IPSec VPN](https://wbuntu.com/?p=224)
 
-[折腾搬瓦工–06–配置IKEv2 VPN](http://wbuntu.com/?p=323)
+[折腾搬瓦工–06–配置IKEv2 VPN](https://wbuntu.com/?p=323)
 
 一键安装IPsec及IKEv2VPN，分别适用于搬瓦工VPS(OpenVZ)与DigitalOcean（KVM）
 
@@ -39,4 +39,11 @@ DO：Ubuntu 14.04 64位版本，内核版本为3.13.0-48-generic x86_64
  * 安卓（使用strongswan官方安卓客户端配置，采用eap-md5协议）
  * iOS（使用IKEv2或IPSec，采用eap-mschapv2协议）
 
+## 新增 02
+
+新增文件**IKEv2WithEAP-TLS.sh**，主要针对iOS上的证书验证做了修改，可以免账号密码，直接使用证书验证客户端了，另外缩减了一下strongSwan的编译选项，去除掉没有使用的模块，让编译过程更快一点。
+
+新增的配置文件兼容之前的VPN配置，在openVZ及KVM主机上都测试过，注意openVZ的机子需要附加**--enable-kernel-libipsec**选项，编译用户空间的ipsec模块。
+
+同时为新的配置写了一篇博客：[折腾搬瓦工–09–为iPhone配置证书认证的VPN](https://wbuntu.com/?p=499)
 
