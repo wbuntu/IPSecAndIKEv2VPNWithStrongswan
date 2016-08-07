@@ -10,7 +10,7 @@ cd strongswan-5.5.0
 #openVZ virtualization should configure with this option: --enable-kernel-libipsec
 make && make install
 
-#you can replace CH,O with anything you want, but they should be kept the same in those certs.
+#you can replace C,O with anything you want, but they should be kept the same in those certs.
 #replace ikev2.wbuntu.me with your server's domain name
 #replace client.wbuntu.me with your url for client
 ipsec pki --gen --outform pem > caKey.pem
