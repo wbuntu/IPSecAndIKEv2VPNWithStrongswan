@@ -45,5 +45,12 @@ DO：Ubuntu 14.04 64位版本，内核版本为3.13.0-48-generic x86_64
 
 新增的配置文件兼容之前的VPN配置，在openVZ及KVM主机上都测试过，注意openVZ的机子需要附加**--enable-kernel-libipsec**选项，编译用户空间的ipsec模块。
 
-同时为新的配置写了一篇博客：[折腾搬瓦工–09–为iPhone配置证书认证的VPN](https://wbuntu.com/?p=499)
+PS:如果客户端采用IKEv2+账号密码认证，又不想在客户端上安装自签名的根证书，可以采取这个方法。
 
+1.为VPS绑定的域名申请一个免费的HTTPS证书
+
+2.将证书的公钥与私钥分别上传到/etc/ipsec.d/certs与/etc/ipsec.d/private目录下
+
+3.在ipsec.conf中设置leftid为绑定的域名，leftcert为上传的证书名，在ipsec.secrets中添加私钥
+
+同时为新的配置写了一篇博客：[折腾搬瓦工–09–为iPhone配置证书认证的VPN](https://wbuntu.com/?p=499)
