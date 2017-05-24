@@ -1,56 +1,74 @@
-# IPSecAndIKEv2VPNWithStrongswan
+# IPSecAndIKEv2VPNWithStrongSwan
 
-相关链接
+在使用了很长一段时间的IKEv2后，再次更新下本文件～
 
-[折腾搬瓦工–04–配置IPSec VPN](https://wbuntu.com/?p=224)
+这个是一键安装IPsec及IKEv2 VPN的指南，适用于KVM，XEN虚拟化的VPS，以及支持TUN/TAP的openVZ主机
 
-[折腾搬瓦工–06–配置IKEv2 VPN](https://wbuntu.com/?p=323)
+文件说明：建议从源码编译，最后一个文件仅供参考
+ 
+* IKEv2WithEAP-TLS.sh        
 
-一键安装IPsec及IKEv2VPN，分别适用于搬瓦工VPS(OpenVZ)与DigitalOcean（KVM）
+配置EAP-MSCHAPv2与EAP-TLS认证的IKEv2服务端，从源码编译
 
-搬瓦工使用的文件为IPSecAndIKEv2SourceCode.sh
+* IPSecAndIKEv2SourceCode.sh
 
-DO使用的文件为IPSecAndIKEv2Binary.sh
+配置EAP-MSCHAPv2认证的IKEv2服务端及IPSec认证的服务端，从源码编译
 
-测试环境为
+ * IPSecAndIKEv2Binary.sh     
 
-搬瓦工：Ubuntu 14.04 32位版本，内核版本为2.6.32-042stab102.9
+配置EAP-MSCHAPv2认证的IKEv2服务端及IPSec认证的服务端，使用apt从源安装程序
 
-DO：Ubuntu 14.04 64位版本，内核版本为3.13.0-48-generic x86_64
+## 前言
+这份安装指南适用于哪些用户？
 
+* 在国内VPS上搭建VPN隧道，使用内网穿透功能的用户，面向开发和调试（国内的大局域网）
+* 有穿墙需求，对安全性要求相对高，主要使用4G网络或联通3G网络的用户（网络的质量和价格是成正比的）
+
+其他类型的用户，需要穿墙的请使用**shadowsocks-libev**，需要使用内网穿透的，国外主机可以自己搭建**FRP**或者**ngork**，国内可以购买花生壳内网穿透（虽然这玩意不是很稳定，但相对便宜）
+
+大多数VPN都依赖UDP协议构建隧道，对网络质量有较高的要求，国际线路即使是TCP协议都很容易丢包，使用**net-speeder**之类的加倍发包工具，也无法改善VPN连接的稳定性，此外部分运营商对VPN协议或者国外IP十分不友好
+
+关于shadowsocks-libev，可以参考
+
+[折腾搬瓦工–02–搭建shadowsocks服务端](https://wbuntu.com/?p=44)
+
+启用BBR的KVM、XEN主机，或者使用lkl来hook程序，开启BBR的openVZ主机，目前使用过Vultr，Linode，DigitalOcean，搬瓦工的主机，不论日本主机还是美国主机，都有很好的表现
+
+下面是IKEv2的安装指南
+
+## 指南
+
+### IP转发
 在文件修改/etc/ipsec.secrets部分中可自行定义PSK、账号和密码
 
 在终端下运行
 
     cat /proc/sys/net/ipv4/ip_forward
 
-若输出为1，则IPV4转发正常，否则修改/etc/sysctl.conf,搜索net.ipv4.ip_forward=1，去掉它的注释，保存后退出，执行sysctl -p，成功开启转发后，为文件添加执行权限后运行即可
+若输出为1，则已启用IPV4转发，否则需要修改**/etc/sysctl.conf**,搜索**net.ipv4.ip_forward=1**，去掉它的注释，保存后退出，执行**sysctl -p**，应用修改
 
-## 新增 00
-添加了对IKEv2的支持，需要在文件中替换三个domainName为VPS的域名，(如果没有域名，可以只配置IPSec VPN)它对应iOS 9中IKEv2 VPN里的远程ID（Remote ID），客户端使用帐号密码验证，采用MS-CHAPv2，需要配置/etc/ipsec.secrets部分中的EAP左右的账户名与密码，客户端还必须安装根证书caCert.pem来验证服务端
+### 证书
+使用IPSec VPN不需要安装根证书，使用IKEv2需要安装根证书，使用自签名的证书需要安装服务端生成的根证书，使用let's encrypt证书的话，除Linux需要安装**DST Root CA X3**根证书，其他的不需要
 
-脚本中也配置好了客户端证书，使用Cisco IPSec时，采用证书代替预共享密钥配置成功，但使用IKEv2配置证书验证时失败，暂且搁置，如果有小伙伴尝试成功，请务必告诉我
+ * windows（windows 7或以上，使用IKEv2，采用eap-mschapv2认证）
+ * 安卓（使用strongswan官方安卓客户端配置，采用eap-md5认证）
+ * iOS（使用IKEv2或IPSec，采用eap-mschapv2认证）
+ * Linux（使用StrongSwan客户端模式，配置ipsec.conf，支持所有的认证方式）
 
-## 新增 01
+### 编译，配置与安装
 
-修改了配置，现在可以支持的如下，除了使用IPSec VPN不需要安装根证书外，其他的都需要安装根证书
+将脚本下载到VPS上，修改对应的账号密码、IP、域名等内容，然后添加可执行权限后运行即可
 
- * windows（windows 7或以上，使用IKEv2，采用eap-mschapv2协议）
- * 安卓（使用strongswan官方安卓客户端配置，采用eap-md5协议）
- * iOS（使用IKEv2或IPSec，采用eap-mschapv2协议）
+由于是在Ubuntu上配置完成的，没有对CentOS进行过测试，但除了一些编译所需的软件名称不同外，其余操作相同
 
-## 新增 02
+相关的博客记录如下
 
-新增文件**IKEv2WithEAP-TLS.sh**，主要针对iOS上的证书验证做了修改，可以免账号密码，直接使用证书验证客户端了，另外缩减了一下strongSwan的编译选项，去除掉没有使用的模块，让编译过程更快一点。
+配置IPSec VPN，包括一些对StrongSwan配置文件的说明：
+[折腾搬瓦工–04–配置IPSec VPN](https://wbuntu.com/?p=224)
 
-新增的配置文件兼容之前的VPN配置，在openVZ及KVM主机上都测试过，注意openVZ的机子需要附加**--enable-kernel-libipsec**选项，编译用户空间的ipsec模块。
+配置IKEv2 VPN，包括对iOS使用IKEv2的一些说明：[折腾搬瓦工–06–配置IKEv2 VPN](https://wbuntu.com/?p=323)
 
-PS:如果客户端采用IKEv2+账号密码认证，又不想在客户端上安装自签名的根证书，可以采取这个方法。
+配置客户端证书认证的IKEv2 VPN，这篇文章比较长，包含步骤说明，截图，以及终端输出：[折腾搬瓦工–09–为iPhone配置证书认证的VPN](https://wbuntu.com/?p=499)
 
-1.为VPS绑定的域名申请一个免费的HTTPS证书
+配置内网穿透，建议使用crontab定时重启客户端服务，虽然国内大局域网很稳定，但也有丢包导致无法连接的时候：[折腾搬瓦工–10–将内网服务暴露到外网](https://wbuntu.com/?p=820)
 
-2.将证书的公钥与私钥分别上传到/etc/ipsec.d/certs与/etc/ipsec.d/private目录下
-
-3.在ipsec.conf中设置leftid为绑定的域名，leftcert为上传的证书名，在ipsec.secrets中添加私钥
-
-同时为新的配置写了一篇博客：[折腾搬瓦工–09–为iPhone配置证书认证的VPN](https://wbuntu.com/?p=499)

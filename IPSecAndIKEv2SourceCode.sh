@@ -2,9 +2,9 @@
 apt-get update
 apt-get install build-essential libgmp3-dev libgmp-dev openssl libssl-dev -y
 
-wget https://download.strongswan.org/strongswan-5.4.0.tar.gz
-tar zxvf strongswan-5.4.0.tar.gz
-cd strongswan-5.4.0
+wget https://download.strongswan.org/strongswan-5.5.2.tar.gz
+tar zxvf strongswan-5.5.2.tar.gz
+cd strongswan-5.5.2
 
 ./configure --sysconfdir=/etc --disable-sql --disable-mysql --disable-ldap --enable-dhcp --enable-eap-identity --enable-eap-mschapv2 --enable-md4 --enable-xauth-eap --enable-eap-peap --enable-eap-md5 --enable-openssl --enable-shared --enable-unity --enable-eap-tls --enable-eap-ttls --enable-eap-tnc --enable-eap-dynamic --enable-addrblock --enable-eap-radius --enable-radattr --enable-kernel-netlink --enable-kernel-libipsec
 

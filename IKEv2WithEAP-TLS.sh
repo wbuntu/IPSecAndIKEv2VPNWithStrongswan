@@ -2,9 +2,9 @@
 apt-get update
 apt-get install build-essential libgmp3-dev libgmp-dev openssl libssl-dev -y
 
-wget https://download.strongswan.org/strongswan-5.5.0.tar.gz
-tar zxvf strongswan-5.5.0.tar.gz
-cd strongswan-5.5.0
+wget https://download.strongswan.org/strongswan-5.5.2.tar.gz
+tar zxvf strongswan-5.5.2.tar.gz
+cd strongswan-5.5.2
 
 ./configure --sysconfdir=/etc --enable-eap-mschapv2 --enable-eap-identity --enable-md4 --enable-eap-tls
 #openVZ virtualization should configure with this option: --enable-kernel-libipsec
