@@ -45,7 +45,7 @@
 
     cat /proc/sys/net/ipv4/ip_forward
 
-若输出为1，则已启用IPV4转发，否则需要修改**/etc/sysctl.conf**,搜索**net.ipv4.ip_forward=1**，去掉它的注释，保存后退出，执行**sysctl -p**，应用修改
+若输出为1，则已启用IPV4转发，否则需要修改/etc/sysctl.conf文件，搜索**net.ipv4.ip_forward=1**，去掉它的注释，保存后退出，执行**sysctl -p**，应用修改
 
 ### 证书
 使用IPSec VPN不需要安装根证书，使用IKEv2需要安装根证书，使用自签名的证书需要安装服务端生成的根证书，使用let's encrypt证书的话，除Linux需要安装**DST Root CA X3**根证书，其他的不需要
