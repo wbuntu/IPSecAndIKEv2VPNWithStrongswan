@@ -30,7 +30,7 @@
 
 关于shadowsocks-libev，可以参考
 
-[折腾搬瓦工–02–搭建shadowsocks服务端](https://wbuntu.com/?p=44)
+[折腾搬瓦工–02–搭建shadowsocks服务端](https://wbuntu.com/p/44)
 
 启用BBR的KVM、XEN主机，或者使用lkl来hook程序，开启BBR的openVZ主机，目前使用过Vultr，Linode，DigitalOcean，搬瓦工的主机，不论日本主机还是美国主机，都有很好的表现
 
@@ -65,17 +65,17 @@
 
 配置IPSec VPN，包括一些对StrongSwan配置文件的说明：
 
-[折腾搬瓦工–04–配置IPSec VPN](https://wbuntu.com/?p=224)
+[折腾搬瓦工–04–配置IPSec VPN](https://wbuntu.com/p/224)
 
 配置IKEv2 VPN，包括对iOS使用IKEv2的一些说明：
 
-[折腾搬瓦工–06–配置IKEv2 VPN](https://wbuntu.com/?p=323)
+[折腾搬瓦工–06–配置IKEv2 VPN](https://wbuntu.com/p/323)
 
 配置客户端证书认证的IKEv2 VPN，这篇文章比较长，包含步骤说明，截图，以及终端输出：
 
-[折腾搬瓦工–09–为iPhone配置证书认证的VPN](https://wbuntu.com/?p=499)
+[折腾搬瓦工–09–为iPhone配置证书认证的VPN](https://wbuntu.com/p/499)
 
 配置内网穿透，建议使用crontab定时重启客户端服务，虽然国内大局域网很稳定，但也有丢包导致无法连接的时候
 
-[折腾搬瓦工–10–将内网服务暴露到外网](https://wbuntu.com/?p=820)
+[折腾搬瓦工–10–将内网服务暴露到外网](https://wbuntu.com/p/820)
 
